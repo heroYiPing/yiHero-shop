@@ -61,12 +61,13 @@ onLoad(() => {
 //
 .page {
   background-color: #f7f7f7;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .scroll-view {
   flex: 1;
+  padding-top: 100px;
 }
 </style>
