@@ -33,6 +33,7 @@ const guessRef = ref<XtxGuessInstance>()
 
 // 滚动触底事件
 const onScrolltolower = () => {
+  console.log('触发了')
   guessRef.value?.getMore()
 }
 
@@ -67,7 +68,9 @@ onLoad(() => {
 }
 
 .scroll-view {
-  flex: 1;
-  padding-top: 100px;
+  // flex: 1;
+  padding-top: 100px !important;
+  /* height: calc(100vh - var(--window-top)) !important; //calc()是动态计算函数 */
+  height: 100vh !important;
 }
 </style>
