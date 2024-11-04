@@ -7,6 +7,7 @@ import type { CategoryItem, BannerItem, HotItem } from '../../types/home'
 import CustomNavbar from '../../pages/index/components/CustomNavbar.vue'
 import CP from './components/CP.vue'
 import HotPanel from './components/HotPanel.vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 import type { XtxGuessInstance } from '../../types/component'
 const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
@@ -17,6 +18,8 @@ const getHomeBannerData = async () => {
 
 // 下拉刷新状态
 const isTriggered = ref(false)
+// 加载中
+const isLoading = ref(false)
 
 // 获取前台分类数据
 const getHomeCategoryData = async () => {
@@ -59,10 +62,10 @@ const onRefresh = async () => {
   isTriggered.value = false
 }
 
-onLoad(() => {
-  getHomeCategoryData()
-  getHomeBannerData()
-  getHomeHotData()
+onLoad(async () => {
+  isLoading.value = true
+  await Promise.all([getHomeCategoryData(), getHomeBannerData(), getHomeHotData()])
+  isLoading.value = false
 })
 </script>
 
@@ -78,12 +81,17 @@ onLoad(() => {
     scroll-y
     @scrolltolower="onScrolltolower"
   >
-    <!-- 自定义轮播图 -->
-    <XtxSwiper :list="bannerList"></XtxSwiper>
-    <CP :list="categoryList" />
-    <HotPanel :list="hotList" />
-    <!-- 猜你喜欢 -->
-    <XtxGuess ref="guessRef" />
+    <!-- 骨架屏 -->
+    <PageSkeleton v-if="isLoading"></PageSkeleton>
+
+    <template v-else>
+      <!-- 自定义轮播图 -->
+      <XtxSwiper :list="bannerList"></XtxSwiper>
+      <CP :list="categoryList" />
+      <HotPanel :list="hotList" />
+      <!-- 猜你喜欢 -->
+      <XtxGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 
