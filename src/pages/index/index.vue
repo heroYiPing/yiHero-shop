@@ -15,6 +15,9 @@ const getHomeBannerData = async () => {
   bannerList.value = res.result
 }
 
+// 下拉刷新状态
+const isTriggered = ref(false)
+
 // 获取前台分类数据
 const getHomeCategoryData = async () => {
   const res = await getHomeCategoryAPI()
@@ -33,8 +36,22 @@ const guessRef = ref<XtxGuessInstance>()
 
 // 滚动触底事件
 const onScrolltolower = () => {
-  console.log('触发了')
+  console.log('触发了上拉刷新')
+
   guessRef.value?.getMore()
+}
+
+const onRefresh = async () => {
+  // 开启动画
+  isTriggered.value = true
+  console.log('触发了下拉刷新')
+  // await getHomeCategoryData()
+  // await getHomeBannerData()
+  // await getHomeHotData()
+
+  await Promise.all([getHomeCategoryData(), getHomeBannerData(), getHomeHotData()])
+
+  isTriggered.value = false
 }
 
 onLoad(() => {
@@ -48,7 +65,14 @@ onLoad(() => {
   <CustomNavbar></CustomNavbar>
 
   <!-- 滚动容器 -->
-  <scroll-view class="scroll-view" scroll-y @scrolltolower="onScrolltolower">
+  <scroll-view
+    :refresher-triggered="isTriggered"
+    refresher-enabled
+    @refresherrefresh="onRefresh"
+    class="scroll-view"
+    scroll-y
+    @scrolltolower="onScrolltolower"
+  >
     <!-- 自定义轮播图 -->
     <XtxSwiper :list="bannerList"></XtxSwiper>
     <CP :list="categoryList" />
