@@ -48,8 +48,13 @@ const onRefresh = async () => {
   // await getHomeCategoryData()
   // await getHomeBannerData()
   // await getHomeHotData()
-
-  await Promise.all([getHomeCategoryData(), getHomeBannerData(), getHomeHotData()])
+  // 重置猜你喜欢数据
+  await Promise.all([
+    getHomeCategoryData(),
+    getHomeBannerData(),
+    getHomeHotData(),
+    guessRef.value?.resetData(),
+  ])
 
   isTriggered.value = false
 }
