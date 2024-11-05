@@ -5,8 +5,6 @@ const props = defineProps<{
   list: BannerItem[]
 }>()
 
-console.log(props, 'list')
-
 const activeIndex = ref(0)
 
 // 当 swiper 下标发生变化时触发
