@@ -11,7 +11,7 @@ onLoad(async () => {
   code = res.code
 })
 
-// 获取用户手机号码
+// 获取用户手机号码 (企业开发者)
 const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
   // 获取参数
   const encryptedData = ev.detail.encryptedData!
@@ -22,10 +22,11 @@ const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
   uni.showToast({ icon: 'none', title: '登录成功' })
 }
 
+// 个人开发练习
 const onGetLogin = async () => {
   // 登录请求
   await postSimpleLoginWxMinAPI({
-    phoneNumber: '18900798117',
+    phoneNumber: '18900798113',
   })
   // 成功提示
   uni.showToast({ icon: 'none', title: '登录成功' })
@@ -46,21 +47,17 @@ const onGetLogin = async () => {
       <!-- <button class="button phone">登录</button> -->
 
       <!-- 小程序端授权登录 -->
-      <button class="button phone" @tap="onGetLogin">
+      <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetphonenumber">
         <text class="icon icon-phone"></text>
         手机号快捷登录
       </button>
-      <!-- <button class="button phone" open-type="getPhoneNumber" @getphonenumber="onGetphonenumber">
-        <text class="icon icon-phone"></text>
-        手机号快捷登录
-      </button> -->
       <view class="extra">
         <view class="caption">
           <text>其他登录方式</text>
         </view>
         <view class="options">
           <!-- 通用模拟登录 -->
-          <button>
+          <button @tap="onGetLogin">
             <text class="icon icon-phone">模拟快捷登录</text>
           </button>
         </view>

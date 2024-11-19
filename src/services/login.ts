@@ -20,6 +20,11 @@ export const postLoginWxMinAPI = (data: LoginParams) => {
     data,
   })
 }
+
+/**
+ * 小程序登录
+ * @param data 请求参数
+ */
 export const postSimpleLoginWxMinAPI = (data: simpleLoginParams) => {
   return http<LoginResult>({
     method: 'POST',
