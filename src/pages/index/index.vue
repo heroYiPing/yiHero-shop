@@ -8,7 +8,8 @@ import CustomNavbar from '../../pages/index/components/CustomNavbar.vue'
 import CP from './components/CP.vue'
 import HotPanel from './components/HotPanel.vue'
 import PageSkeleton from './components/PageSkeleton.vue'
-import type { XtxGuessInstance } from '../../types/component'
+
+import { useGuessList } from '../../composables/index.js'
 const bannerList = ref<BannerItem[]>([])
 const categoryList = ref<CategoryItem[]>([])
 const getHomeBannerData = async () => {
@@ -34,15 +35,7 @@ const getHomeHotData = async () => {
   hotList.value = res.result
 }
 
-// 获取猜你喜欢组件实例
-const guessRef = ref<XtxGuessInstance>()
-
-// 滚动触底事件
-const onScrolltolower = () => {
-  console.log('触发了上拉刷新')
-
-  guessRef.value?.getMore()
-}
+const { guessRef, onScrolltolower } = useGuessList()
 
 const onRefresh = async () => {
   // 开启动画
