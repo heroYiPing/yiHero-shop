@@ -13,6 +13,7 @@ const onLogout = () => {
     success: (res) => {
       if (res.confirm) {
         memberStore.clearProfile()
+        uni.navigateBack()
       }
     },
   })

@@ -98,26 +98,35 @@
 		]
 	},
 	// 分包加载规则
-  "subPackages": [
-    {
-      // 子包的根目录
-      "root": "pagesMember",
-      // 页面路径和窗口表现
-      "pages": [
-        {
-          "path": "settings/settings",
-          "style": {
-            "navigationBarTitleText": "设置"
-          }
-        }
-      ]
-    }
-  ],
-  // 分包预下载规则
-  "preloadRule": {
-    "pages/my/my": {
-      "network": "all",
-      "packages": ["pagesMember"]
-    }
-  }
+	"subPackages": [
+		{
+			// 子包的根目录
+			"root": "pagesMember",
+			// 页面路径和窗口表现
+			"pages": [
+				{
+					"path": "settings/settings",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "profile/profile",
+					"style": {
+            "navigationStyle": "custom",
+						"navigationBarTitleText": "个人信息"
+					}
+				}
+			]
+		}
+	],
+	// 分包预下载规则
+	"preloadRule": {
+		"pages/my/my": {
+			"network": "all",
+			"packages": [
+				"pagesMember"
+			]
+		}
+	}
 }
