@@ -2,15 +2,49 @@
 import { onMounted, ref } from 'vue'
 import type { ProfileDetail } from '../../types/member'
 import { getMemberProfileAPI } from '../../services/profile'
+import { useMemberStore } from '../../stores'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
-
+const memberStore = useMemberStore()
 // 获取个人信息
 const profile = ref<ProfileDetail>()
 const getMemberProfileData = async () => {
   const res = await getMemberProfileAPI()
   profile.value = res.result
+}
+
+const onAvatarChange = () => {
+  // 调用拍照选择图片的api
+  uni.chooseMedia({
+    mediaType: ['image'], // 图片
+    count: 1, // 文件个数
+    /* sourceType: ['album', 'camera'], */
+    success: (res) => {
+      // 本地路径
+      const { tempFilePath } = res.tempFiles[0]
+      // 文件上传
+      uni.uploadFile({
+        url: '/member/profile/avatar',
+        name: 'file', // 后端数据字段名
+        filePath: tempFilePath, // 新头像
+        success: (res) => {
+          // 判断状态码是否上传成功
+          if (res.statusCode === 200) {
+            // 提取头像
+            const { avatar } = JSON.parse(res.data).result
+            // 当前页面更新头像
+            profile.value!.avatar = avatar
+            // 更新 Store 头像
+            memberStore.profile!.avatar = avatar
+            uni.showToast({ icon: 'success', title: '更新成功' })
+          } else {
+            uni.showToast({ icon: 'error', title: '出现错误' })
+          }
+        },
+      })
+    },
+  })
 }
 
 onMounted(() => {
@@ -27,7 +61,7 @@ onMounted(() => {
     </view>
     <!-- 头像 -->
     <view class="avatar">
-      <view class="avatar-content">
+      <view class="avatar-content" @tap="onAvatarChange">
         <image class="image" :src="profile?.avatar" mode="aspectFill" />
         <text class="text">点击修改头像</text>
       </view>
