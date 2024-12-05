@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import type { ProfileDetail } from '../../types/member'
-import { getMemberProfileAPI } from '../../services/profile'
+import type { ProfileDetail, ProfileParams } from '../../types/member'
+import { getMemberProfileAPI, putMemberProfileAPI } from '../../services/profile'
 import { useMemberStore } from '../../stores'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const memberStore = useMemberStore()
-// 获取个人信息
-const profile = ref<ProfileDetail>()
+// 获取个人信息,修改个人信息需提供初始值
+const profile = ref({} as ProfileDetail)
 const getMemberProfileData = async () => {
   const res = await getMemberProfileAPI()
   profile.value = res.result
@@ -47,6 +47,21 @@ const onAvatarChange = () => {
   })
 }
 
+const onSubmit = () => {
+  // 提交表单
+  const { nickname, gender, birthday, profession } = profile.value!
+  const data: ProfileParams = {
+    nickname,
+    gender,
+    birthday,
+    profession,
+  }
+  // 提交接口
+  putMemberProfileAPI(data).then((res) => {
+    console.log(res, 'res')
+  })
+}
+
 onMounted(() => {
   getMemberProfileData()
 })
@@ -76,7 +91,7 @@ onMounted(() => {
         </view>
         <view class="form-item">
           <text class="label">昵称</text>
-          <input class="input" type="text" placeholder="请填写昵称" :value="profile?.nickname" />
+          <input class="input" type="text" placeholder="请填写昵称" v-model="profile!.nickname" />
         </view>
         <view class="form-item">
           <text class="label">性别</text>
@@ -107,17 +122,17 @@ onMounted(() => {
         <view class="form-item">
           <text class="label">城市</text>
           <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
-            <view v-if="profile?.fullLocation">profile?.fullLocation</view>
+            <view v-if="profile?.fullLocation">{{ profile?.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
         <view class="form-item">
           <text class="label">职业</text>
-          <input class="input" type="text" placeholder="请填写职业" value="" />
+          <input class="input" type="text" placeholder="请填写职业" v-model="profile!.profession" />
         </view>
       </view>
       <!-- 提交按钮 -->
-      <button class="form-button">保 存</button>
+      <button class="form-button" @tap="onSubmit">保 存</button>
     </view>
   </view>
 </template>
