@@ -47,7 +47,7 @@ const onAvatarChange = () => {
   })
 }
 
-const onSubmit = () => {
+const onSubmit = async () => {
   // 提交表单
   const { nickname, gender, birthday, profession } = profile.value!
   const data: ProfileParams = {
@@ -57,9 +57,14 @@ const onSubmit = () => {
     profession,
   }
   // 提交接口
-  putMemberProfileAPI(data).then((res) => {
-    console.log(res, 'res')
-  })
+  let res = await putMemberProfileAPI(data)
+  // 更新Store 昵称
+  memberStore.profile!.nickname = nickname
+  uni.showToast({ icon: 'success', title: '保存成功' })
+  setTimeout(() => {
+    // 页面跳转
+    uni.switchTab({ url: '/pages/my/my' })
+  }, 500)
 }
 
 onMounted(() => {
