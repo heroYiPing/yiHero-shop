@@ -71,6 +71,11 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (e: any) => {
   profile.value!.gender = e.detail.value as Gender
 }
 
+// 修改生日
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
+  profile.value.birthday = ev.detail.value
+}
+
 onMounted(() => {
   getMemberProfileData()
 })
@@ -118,6 +123,7 @@ onMounted(() => {
         <view class="form-item">
           <text class="label">生日</text>
           <picker
+            @change="onBirthdayChange"
             class="picker"
             mode="date"
             start="1900-01-01"
